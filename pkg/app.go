@@ -5,6 +5,9 @@ import (
 	"net/http"
 
 	"github.com/go-chi/chi"
+
+	DashboardManager "github.com/parkedwards/go-dashboard-api/pkg/managers/dashboard"
+	DashboardRouter "github.com/parkedwards/go-dashboard-api/pkg/routers/dashboard"
 )
 
 const (
@@ -15,8 +18,14 @@ const (
 // @version 1.0
 // @description Pull data on client workouts + statuses.
 func Init() *chi.Mux {
-	router := chi.NewRouter()
-	return router
+	r := chi.NewRouter()
+
+	DashboardManager.New()
+	manager := DashboardManager.New()
+	router := DashboardRouter.New(manager)
+	router.RegisterRoutes(r)
+
+	return r
 }
 
 func Boot(router *chi.Mux) {
