@@ -16,20 +16,20 @@ func New() *DashboardManager {
 }
 
 // external HTTP GET helper
-func httpGet(url string) []byte {
+func httpGet(url string) ([]byte, error) {
 	resp, err := http.Get(url)
 
 	if err != nil {
-		// handle failed fetch
+		fmt.Printf("http get failed! %v", err)
 	}
 
 	defer resp.Body.Close()
 	body, _ := ioutil.ReadAll(resp.Body)
-	return body
+	return body, err
 }
 
 func (m *DashboardManager) GetAllClients() []models.Client {
-	body := httpGet("https://sandbox.future.fit/users")
+	body, _ := httpGet("https://sandbox.future.fit/users")
 	data := []models.Client{}
 	err := json.Unmarshal([]byte(body), &data)
 	if err != nil {
@@ -39,11 +39,29 @@ func (m *DashboardManager) GetAllClients() []models.Client {
 }
 
 func (m *DashboardManager) GetAllWorkoutsForClient(clientId string) []models.ClientWorkout {
-	body := httpGet(fmt.Sprintf("https://sandbox.future.fit/users/%v/workouts", clientId))
+	body, _ := httpGet(fmt.Sprintf("https://sandbox.future.fit/users/%v/workouts", clientId))
 	data := []models.ClientWorkout{}
 	err := json.Unmarshal([]byte(body), &data)
 	if err != nil {
 		fmt.Println(err)
 	}
 	return data
+}
+
+func (m *DashboardManager) NormalizeWorkoutForDashboard(workout models.ClientWorkout) models.WorkoutResponse {
+
+	// some computation needed here to flag as REST or SKIPPED
+	workoutName := workout.Name
+	if workoutName == "" && workout.Type == "rest" {
+		workoutName = "REST"
+	}
+
+	workoutResponse := models.WorkoutResponse{
+		Name: workoutName,
+		// ScheduledAt
+		// CompletedAt string `json:"completed_at"`
+		// MissedAt    string `json:"missed_at"`
+	}
+
+	return workoutResponse
 }

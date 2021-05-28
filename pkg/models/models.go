@@ -34,7 +34,14 @@ type ClientWorkout struct {
 }
 
 // if you have time: do some sanitization on the workout payloads, and drop them in here
-type WorkoutResponse struct{}
+type WorkoutResponse struct {
+	Name string `json:"name"`
+
+	ScheduledAt string `json:"scheduled_at"`
+	CompletedAt string `json:"completed_at"`
+	MissedAt    string `json:"missed_at"`
+	// add addt'l, normalized keys here (or use embedded struct)
+}
 
 type ClientResponse struct {
 	Id            string `json:"id"`
@@ -42,5 +49,6 @@ type ClientResponse struct {
 	LastName      string `json:"last_name"`
 	Gender        string `json:"gender"`
 	InitialWeight int64  `json:"initial_weight"`
-	Workouts      []ClientWorkout
+
+	Workouts []ClientWorkout
 }

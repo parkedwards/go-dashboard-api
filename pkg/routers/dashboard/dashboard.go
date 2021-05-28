@@ -33,8 +33,13 @@ func (r *DashboardRouter) getAllWorkoutsForDashboard(w http.ResponseWriter, req 
 
 	clients := r.manager.GetAllClients()
 
+	// ideally, handle the first clients GET failure here + exit
+
 	for _, c := range clients {
 		clientWorkouts := r.manager.GetAllWorkoutsForClient(c.Id)
+
+		// ideally, handle any subsequent workout GET here + exit
+
 		payload := models.ClientResponse{
 			Id:            c.Id,
 			FirstName:     c.FirstName,
@@ -43,6 +48,7 @@ func (r *DashboardRouter) getAllWorkoutsForDashboard(w http.ResponseWriter, req 
 			InitialWeight: c.InitialWeight,
 			Workouts:      clientWorkouts,
 		}
+
 		dashboardPayload = append(dashboardPayload, payload)
 	}
 
