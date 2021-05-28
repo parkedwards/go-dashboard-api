@@ -37,6 +37,10 @@ type ClientWorkout struct {
 type WorkoutResponse struct{}
 
 type ClientResponse struct {
-	Client
-	Workouts []WorkoutResponse
+	Id            string `json:"id"`
+	FirstName     string `json:"first_name"`
+	LastName      string `json:"last_name"`
+	Gender        string `json:"gender"`
+	InitialWeight int64  `json:"initial_weight"`
+	Workouts      []ClientWorkout
 }
