@@ -20,8 +20,6 @@ const (
 func Init() *chi.Mux {
 	r := chi.NewRouter()
 
-	DashboardManager.New()
-
 	manager := DashboardManager.New()
 
 	router := DashboardRouter.New(manager)
